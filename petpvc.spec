@@ -1,18 +1,20 @@
-%global commit 775857a079f11f6dcfc8f6b536a8d5c597be1bad
+%global commit 8b28893b24326e4701378ea65753d2a35016e264
 %global shortcommit %(c=%{commit}; echo ${c:0:7})
 
 Name:           petpvc
 Version:        0.0.0
 Release:        0.1.git%{shortcommit}%{?dist}
-Summary:        Toolbox for partial volume correction (PVC) in positron emission tomography (PET) 
+Summary:        Tools for partial volume correction (PVC) in positron emission tomography (PET) 
 
 License:        ASL 2.0
-URL:            https://github.com/bathomas/PETPVC
-Source0:        https://github.com/bathomas/PETPVC/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
+URL:            https://github.com/UCL/PETPVC
+Source0:        https://github.com/UCL/PETPVC/archive/%{commit}/%{name}-%{shortcommit}.tar.gz
 
 BuildRequires:  cmake
 BuildRequires:  gcc-c++
-BuildRequires:  InsightToolkit
+BuildRequires:  InsightToolkit-devel gdcm-devel
+BuildRequires:  fftw-devel
+BuildRequires:  vxl-devel
 
 %description
 %{summary}.
@@ -20,7 +22,6 @@ BuildRequires:  InsightToolkit
 %prep
 %autosetup -n PETPVC-%{commit}
 
-rm -rf build
 mkdir build
 
 %build
@@ -37,16 +38,19 @@ popd
 
 %check
 pushd build
-  # https://github.com/bathomas/PETPVC/issues/1
-  ctest -VV || :
+  ctest -VV
 popd
 
 %files
-%license LICENSE
+%license LICENSE.txt
 %doc README.md
 %{_bindir}/%{name}
 %{_bindir}/pvc_*
 
 %changelog
+* Sat Dec 12 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.0.0-0.1.git8b28893
+- Update with new upstream repo
+- Fix things according review
+
 * Sat Dec 05 2015 Igor Gnatenko <i.gnatenko.brain@gmail.com> - 0.0.0-0.1.git775857a
 - Initial package
